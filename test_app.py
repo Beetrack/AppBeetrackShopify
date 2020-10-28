@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, Response
+from flask import Flask, render_template, request, redirect, Response, session
 from configuration import Configuration as cfg
 from flask_sqlalchemy import SQLAlchemy 
 import requests
@@ -43,6 +43,7 @@ def install():
 @app.route('/connect', methods= ['POST','GET'])
 def connect():
     shop = request.args.get('shop')
+    session['shop'] = shop
     if request.args.get('shop'):
         params = {
             "client_id" : cfg.SHOPIFY_CONFIGURATION['API_KEY'],
@@ -67,6 +68,7 @@ def connect():
 
 @app.route('/connected')
 def connected():
+    print('Shop ', session['shop'])
     return render_template('connected.html')
 
 @app.route('/connect/api_key', methods= ['POST','GET'])
