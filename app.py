@@ -69,10 +69,12 @@ class Homologation_configurations(db.Model):
 
 @app.route('/configuration', methods= ['GET', 'POST'])
 def add_api_key():
-    shop = request.args.get('shop')
-    session['shop'] = shop
+    if request.method == "GET":
+        shop = request.args.get('shop')
+        session['shop'] = shop
+        return render_template("configuration.html")
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         beetrack_api_key = request.form['api_key']
         verify = BeetrackApiHandler(beetrack_api_key).verify_apikey()
         if verify == True:
@@ -81,17 +83,22 @@ def add_api_key():
         else:
             #Crear un template para manejar el error de llave API
             return render_template('error.html')
+    else:
+         return render_template('error.html')
 
 @app.route('/install', methods= ['GET'])
 def install():
     if "shop" in session:
         shop = session["shop"]
+        auth_url = "https://{0}/admin/oauth/authorize?client_id={1}&scope={2}&redirect_uri={3}".format(
+            shop,
+            cfg.SHOPIFY_CFG['API_KEY'],
+            cfg.SHOPIFY_CFG['SCOPE'],
+            cfg.SHOPIFY_CFG['REDIRECT_URI']
+            )
+        return redirect(auth_url)
     else: 
         return Response(response="Error: Parameter shop Not Found", status= 500)
-
-    auth_url = "https://{0}/admin/oauth/authorize?client_id={1}&scope={2}&redirect_uri={3}".format(
-        shop, cfg.SHOPIFY_CFG['API_KEY'], cfg.SHOPIFY_CFG['SCOPE'], cfg.SHOPIFY_CFG['REDIRECT_URI'])
-    return redirect(auth_url)
 
 @app.route('/connect', methods= ['GET', 'POST'])  
 def connect():
