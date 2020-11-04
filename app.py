@@ -7,6 +7,7 @@ import os
 import ipdb
 import json
 import requests
+import uuid
 
 app = Flask(__name__)
 app.debug = True
@@ -127,7 +128,8 @@ def add_api_key():
         db.session.add(new_shopify_credential)
         db.session.commit()
 
-        new_beetrack_credential = Beetrack_credentials(api_key=post_api_key, account_uuid='XXXX',
+        account_uuid = str(uuid.uuid4())
+        new_beetrack_credential = Beetrack_credentials(api_key=post_api_key, account_uuid=account_uuid,
         shop_id_beetrack=shop_obj)
         db.session.add(new_beetrack_credential)
         db.session.commit()
