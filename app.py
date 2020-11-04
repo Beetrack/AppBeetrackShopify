@@ -2,11 +2,10 @@ from flask import Flask, request, redirect, render_template, session, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from configurations import Configurations as cfg
-import mysql.connector
-import os
-import ipdb
-import json
-import requests
+from api.shopify import ShopifyApiHandler
+from api.beetrack import BeetrackApiHandler
+import mysql.connector, os, ipdb, json, requests, uuid
+
 
 app = Flask(__name__)
 app.debug = True
@@ -70,77 +69,61 @@ class Homologation_configurations(db.Model):
 
 @app.route('/install', methods= ['GET'])
 def install():
-
     if request.args.get('shop'):
         shop = request.args.get('shop')
-
     else: 
         return Response(response="Error: Parameter shop Not Found", status= 500)
 
     auth_url = "https://{0}/admin/oauth/authorize?client_id={1}&scope={2}&redirect_uri={3}".format(
         shop, cfg.SHOPIFY_CFG['API_KEY'], cfg.SHOPIFY_CFG['SCOPE'], cfg.SHOPIFY_CFG['REDIRECT_URI'])
-     
     return redirect(auth_url)
 
 @app.route('/connect', methods= ['GET', 'POST'])  
 def connect():
 
     if request.args.get('shop'):
-
-        params = {
-            "client_id" : cfg.SHOPIFY_CFG['API_KEY'],
-            "client_secret" : cfg.SHOPIFY_CFG['API_SECRET'],
-            "code" : request.args.get("code")
-        }
-
-        resp = requests.post("https://{0}/admin/oauth/access_token".format(request.args.get('shop')), data=params)
-        resp_dict = json.loads(resp.text)
-
-        access_token = resp_dict.get("access_token")
-        shop = request.args.get('shop')
-
-        session['access_token'] = access_token
-        session['shop'] = shop
-
-        return render_template('configuration.html')
+        if not 'access_token' in session:
+            shop = request.args.get('shop')
+            code = request.args.get("code")
+            get_token = ShopifyApiHandler().get_access_token(shop, code)
+            session['access_token'] = get_token
+            session['shop'] = shop
+            return render_template('configuration.html')
+        else: 
+            return render_template('configuration.html')
 
     else:
-        print("Failed to get access token: ", resp.status.code, resp.text)
+        print("Failed to get access token: ")
         return render_template('error.html')
 
 @app.route('/configuration', methods= ['GET', 'POST'])
 def add_api_key():
     if request.method == 'POST':
-        post_api_key = request.form['api_key']
+        beetrack_api_key = request.form['api_key']
+        verify = BeetrackApiHandler(beetrack_api_key).verify_apikey()
+        if verify == True:
+            shop = session['shop']
+            new_shop = Shops(name=shop)
+            db.session.add(new_shop)
+            db.session.commit()
 
-        shop = session['shop']
-        new_shop = Shops(name=shop)
-        db.session.add(new_shop)
-        db.session.commit()
+            access_token = session['access_token']
+            shop_id = new_shop.id
+            user_name = new_shop.name
+            shop_obj = Shops.query.get(shop_id)
+            new_shopify_credential = Shopify_credentials(user_name=user_name, token=access_token, 
+            shop_id_shopify=shop_obj)
+            db.session.add(new_shopify_credential)
+            db.session.commit()
 
-        access_token = session['access_token']
-        shop_id = new_shop.id
-        user_name = new_shop.name
-        shop_obj = Shops.query.get(shop_id)
-        new_shopify_credential = Shopify_credentials(user_name=user_name, token=access_token, 
-        shop_id_shopify=shop_obj)
-        db.session.add(new_shopify_credential)
-        db.session.commit()
-
-        new_beetrack_credential = Beetrack_credentials(api_key=post_api_key, account_uuid='XXXX',
-        shop_id_beetrack=shop_obj)
-        db.session.add(new_beetrack_credential)
-        db.session.commit()
-
-        return render_template('connected.html')
-
-
-
-
-
-
-
-
+            account_uuid = str(uuid.uuid4())
+            new_beetrack_credential = Beetrack_credentials(api_key=beetrack_api_key, account_uuid=account_uuid,
+            shop_id_beetrack=shop_obj)
+            db.session.add(new_beetrack_credential)
+            db.session.commit()
+            return render_template('connected.html')
+        else:
+            return render_template('connected.html')
 
 if __name__ == "__main__":
     app.run(debug= True, port= 5000)   
