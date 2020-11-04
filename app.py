@@ -74,6 +74,7 @@ def add_api_key():
         verify = BeetrackApiHandler(beetrack_api_key).verify_apikey()
         if verify == True:
             shop = request.args.get('shop')
+            session['shop'] = shop
 
             new_shop = Shops(name=shop)
             db.session.add(new_shop)
@@ -113,11 +114,10 @@ def connect():
 
     if request.args.get('shop'):
         if not 'access_token' in session:
-            
+
             code = request.args.get("code")
             get_token = ShopifyApiHandler().get_access_token(shop, code)
             session['access_token'] = get_token
-            session['shop'] = shop
             return render_template('configuration.html')
         else: 
             return render_template('configuration.html')
