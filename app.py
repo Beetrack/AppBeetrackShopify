@@ -67,42 +67,14 @@ class Homologation_configurations(db.Model):
     def __repr__(self):
         return 'Homologation_configuration ' + str(self.id)
 
-@app.route('/install', methods= ['GET'])
-def install():
-    if request.args.get('shop'):
-        shop = request.args.get('shop')
-    else: 
-        return Response(response="Error: Parameter shop Not Found", status= 500)
-
-    auth_url = "https://{0}/admin/oauth/authorize?client_id={1}&scope={2}&redirect_uri={3}".format(
-        shop, cfg.SHOPIFY_CFG['API_KEY'], cfg.SHOPIFY_CFG['SCOPE'], cfg.SHOPIFY_CFG['REDIRECT_URI'])
-    return redirect(auth_url)
-
-@app.route('/connect', methods= ['GET', 'POST'])  
-def connect():
-
-    if request.args.get('shop'):
-        if not 'access_token' in session:
-            shop = request.args.get('shop')
-            code = request.args.get("code")
-            get_token = ShopifyApiHandler().get_access_token(shop, code)
-            session['access_token'] = get_token
-            session['shop'] = shop
-            return render_template('configuration.html')
-        else: 
-            return render_template('configuration.html')
-
-    else:
-        print("Failed to get access token: ")
-        return render_template('error.html')
-
 @app.route('/configuration', methods= ['GET', 'POST'])
 def add_api_key():
     if request.method == 'POST':
         beetrack_api_key = request.form['api_key']
         verify = BeetrackApiHandler(beetrack_api_key).verify_apikey()
         if verify == True:
-            shop = session['shop']
+            shop = request.args.get('shop')
+
             new_shop = Shops(name=shop)
             db.session.add(new_shop)
             db.session.commit()
@@ -124,6 +96,35 @@ def add_api_key():
             return render_template('connected.html')
         else:
             return render_template('connected.html')
+
+@app.route('/install', methods= ['GET'])
+def install():
+    if request.args.get('shop'):
+        shop = request.args.get('shop')
+    else: 
+        return Response(response="Error: Parameter shop Not Found", status= 500)
+
+    auth_url = "https://{0}/admin/oauth/authorize?client_id={1}&scope={2}&redirect_uri={3}".format(
+        shop, cfg.SHOPIFY_CFG['API_KEY'], cfg.SHOPIFY_CFG['SCOPE'], cfg.SHOPIFY_CFG['REDIRECT_URI'])
+    return redirect(auth_url)
+
+@app.route('/connect', methods= ['GET', 'POST'])  
+def connect():
+
+    if request.args.get('shop'):
+        if not 'access_token' in session:
+            
+            code = request.args.get("code")
+            get_token = ShopifyApiHandler().get_access_token(shop, code)
+            session['access_token'] = get_token
+            session['shop'] = shop
+            return render_template('configuration.html')
+        else: 
+            return render_template('configuration.html')
+
+    else:
+        print("Failed to get access token: ")
+        return render_template('error.html')
 
 if __name__ == "__main__":
     app.run(debug= True, port= 5000)   
