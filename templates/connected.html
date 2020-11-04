@@ -1,38 +1,11 @@
-{% extends 'base.html' %}
-
-{% block head %}
-<title>Beetrack</title>
-{% endblock %}
-
-{% block body %}
-<main role="main">
-    <div class="jumbotron">
-        <div class="col-sm-8 mx-auto">
-            <h1>Conectate a Beetrack</h1>
-            <p>Para conectarte con Beetrack debes configurar desde tu cuenta una llave API (API KEY).</p>
-            <p>Para configurar la llave API inicia sesion en tu cuenta Beetrack -> Sección de Ajustes -> Configuración avanzada
-                -> Llave API
-            </p>
-            <p>
-                Cunado cuentes con tu llave API introducela a continuacion y dale click a continuar.
-            </p>
-            <form action= '/connect/api_key' method='POST'>
-                <div class="mb-3">
-                    <label for="api_key">Clave API</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">#</span>
-                        </div>
-                        <input type="text" class="form-control" id="api_key" placeholder="api_key" required>
-                        <div class="invalid-feedback" style="width: 100%;">
-                            Introdusca llave API.
-                        </div>
-                    </div>
-                </div>
-                <input type='submit' value='Conectar'>
-            </form>
-            
-        </div>
-    </div>
-</main>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connected</title>
+</head>
+<body>
+    <h1>Successful connection!</h1>
+</body>
+</html>
