@@ -35,13 +35,7 @@ class ShopifyApiHandler:
                 }
             }
         url = self.base_url + 'webhooks.json'
-        print(url)
         r = requests.post(url= url, headers= headers, json= params)
-        print(r.json())
-        print(r.status_code)
-        print(headers)
-        print(params)
-        print(api_key)
         if r.status_code == 201:
             return True
         return False
