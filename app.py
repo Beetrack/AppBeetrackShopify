@@ -106,7 +106,8 @@ def connect():
         if not 'access_token' in session:
             shop = session["shop"]
             code = request.args.get("code")
-            get_shopify_token = ShopifyApiHandler().get_access_token(shop, code)
+            get_shopify_token = ShopifyApiHandler(shop).get_access_token(code)
+            session['shopify_token'] = get_shopify_token
             new_shop = Shops(name=shop)
             db.session.add(new_shop)
             db.session.commit()
@@ -123,13 +124,27 @@ def connect():
             new_beetrack_credential = Beetrack_credentials(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=shop_obj)
             db.session.add(new_beetrack_credential)
             db.session.commit()
-            return render_template('connected.html')
+            return redirect('/webhooks')
         else: 
             return render_template('configuration.html')
 
     else:
         print("Failed to get access token: ")
         return render_template('error.html')
+
+@app.route('/webhooks')
+def webhooks_shopify():
+    if 'shop' and 'shopify_token' in session:
+        shop = session["shop"]
+        shopify_token = session['shopify_token']
+        create_shopify_webhook = ShopifyApiHandler(shop).create_webhook(shopify_token,)
+        if create_shopify_webhook == True:
+            return render_template('connected.html')
+        else:
+            return render_template('error.html')
+    else:
+        return redirect('/connect')
+
 
 if __name__ == "__main__":
     app.run(debug= True, port= 5000)   
