@@ -1,5 +1,7 @@
-import requests, json
-import configurations as cfg
+import requests, json, sys
+sys.path.insert(1, '/Users/adipr/OneDrive/Documentos/Python/BeeTrack/Integrations/Shopify/AppBeetrackShopify')
+
+from configurations import Configurations as cfg
 
 class ShopifyApiHandler:
 
