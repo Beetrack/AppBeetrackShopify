@@ -5,7 +5,7 @@ class BeetrackCredentialsModel(db.Model):
 
     __tablename__ = "beetrack_credentials"
 
-    id = db.Column(db.Integer,primary_key=True ,autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     api_key = db.Column(db.String(255))
     account_uuid = db.Column(db.String(255))
 

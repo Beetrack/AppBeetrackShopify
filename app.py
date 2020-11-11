@@ -10,13 +10,9 @@ from models.shops import ShopsModel
 from models.shopify import ShopifyCredentialsModel
 from models.beetrack import BeetrackCredentialsModel
 
-# Init app
 app = Flask(__name__)
-# Turn app debugger
 app.debug = True
-#
 app.secret_key = '12334abcd'
-# Batabase
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(
     cfg.DB_CFG['DB_USER_NAME'], cfg.DB_CFG['DB_PASS'], cfg.DB_CFG['DB_HOST'], cfg.DB_CFG['DB_NAME'])
 # Migration
@@ -70,7 +66,6 @@ def connect():
             user_name = new_shop.name
             shop_obj = ShopsModel.query.get(shop_id)
             new_shopify_credential = ShopifyCredentialsModel(user_name=user_name, token=get_shopify_token, shop_id_shopify=shop_obj)
-            # Se debe configurar el campo donde se le pasa el objeto de shop con el mismo nombre que el backref.
             new_shopify_credential.save_to_db()
 
             account_uuid = str(uuid.uuid4())
