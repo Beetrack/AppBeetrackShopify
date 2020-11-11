@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuration</title>
-</head>
-<body>
-    <form action= '/configuration' method= 'POST'>
-        <label for="api_key">API Key:</label> 
-        <input type="text" name='api_key' id='api_key'>
-        <br>
-        <input type='submit' value='Submit'>      
+{% extends "base.html" %}
+{% block title %}Login Page {% endblock %}
+
+{% block content %}
+<form action= '/configuration' method= 'POST'>
+    <label for="api_key">API Key:</label> 
+    <p><input type="text" name='api_key' id='api_key'></p>
+    <br>
+    <p><input type="submit" value="Submit" /></p>    
     </form>
-</body>
-</html>
+{% endblock %}

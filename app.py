@@ -8,7 +8,6 @@ import mysql.connector, os, ipdb, json, requests, uuid
 
 
 app = Flask(__name__)
-app.debug = True
 app.secret_key = '12334abcd'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(
     cfg.DB_CFG['DB_USER_NAME'], cfg.DB_CFG['DB_PASS'], cfg.DB_CFG['DB_HOST'], cfg.DB_CFG['DB_NAME'])
@@ -23,13 +22,11 @@ class Shops(db.Model):
     name = db.Column(db.String(255), nullable= False, unique= True)
     shopify_credentials = db.relationship('Shopify_credentials', backref='shop_id_shopify', lazy='select')
     beetrack_credentials = db.relationship('Beetrack_credentials', backref='shop_id_beetrack', lazy='select')
-    homologation_configurations = db.relationship('Homologation_configurations', backref='shop_id_homo', lazy='select')
-
 
     def __repr__(self):
         return 'Shop ' + str(self.id)
 
-class Shopify_credentials(db.Model):
+class ShopifyCredentials(db.Model):
 
     __tablename__ = "shopify_credentials"
 
@@ -42,7 +39,7 @@ class Shopify_credentials(db.Model):
     def __repr__(self):
         return 'Shopify_credential ' + str(self.id)
 
-class Beetrack_credentials(db.Model):
+class BeetrackCredentials(db.Model):
 
     __tablename__ = "beetrack_credentials"
 
@@ -55,17 +52,6 @@ class Beetrack_credentials(db.Model):
     def __repr__(self):
         return 'Beetrack_credential ' + str(self.id)
 
-class Homologation_configurations(db.Model):
-
-    __tablename__ = "omologation_configurations"
-
-    id = db.Column(db.Integer,primary_key=True ,autoincrement=True)
-    account_configuration = db.Column(db.Text())
-
-    shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
-
-    def __repr__(self):
-        return 'Homologation_configuration ' + str(self.id)
 
 @app.route('/configuration', methods= ['GET', 'POST'])
 def add_api_key():
@@ -76,7 +62,9 @@ def add_api_key():
 
     elif request.method == 'POST':
         beetrack_api_key = request.form['api_key']
+        print(beetrack_api_key)
         verify = BeetrackApiHandler(beetrack_api_key).verify_apikey()
+        print(verify)
         if verify == True:
             session["beetrack_api_key"] = beetrack_api_key
             return redirect('/install')
@@ -96,6 +84,7 @@ def install():
             cfg.SHOPIFY_CFG['SCOPE'],
             cfg.SHOPIFY_CFG['REDIRECT_URI']
             )
+        print(auth_url)
         return redirect(auth_url)
     else: 
         return Response(response="Error: Parameter shop Not Found", status= 500)
@@ -147,4 +136,4 @@ def webhooks_shopify():
 
 
 if __name__ == "__main__":
-    app.run(debug= True, port= 5000)   
+    app.run(debug=True, port= 5000)   
