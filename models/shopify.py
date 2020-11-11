@@ -11,15 +11,19 @@ class ShopifyCredentialsModel(db.Model):
     def __repr__(self):
         return 'Shopify_credential ' + str(self.id)
 
-    def __init__(self, user_name, token, shop):
+    def __init__(self, user_name, token, shop_id_shopify):
         self.user_name = user_name
         self.token = token
-        self.shop = shop
+        self.shop_id_shopify = shop_id_shopify
 
     @classmethod
     def find_by_user_name(cls, user_name):
         return cls.query.filter_by(user_name= user_name).first()
 
     def save_to_db(self):
+<<<<<<< HEAD
+=======
+        print(self.shop_id_shopify)
+>>>>>>> 9173a250773e41a383c352b739d02c0dd140fe0c
         db.session.add(self)
         db.session.commit()

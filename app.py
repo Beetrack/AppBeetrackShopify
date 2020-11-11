@@ -65,12 +65,13 @@ def connect():
             print(shop_id)
             user_name = new_shop.name
             shop_obj = ShopsModel.query.get(shop_id)
-            new_shopify_credential = ShopifyCredentialsModel(user_name=user_name, token=get_shopify_token, shop=shop_obj)
+            new_shopify_credential = ShopifyCredentialsModel(user_name=user_name, token=get_shopify_token, shop_id_shopify=shop_obj)
+            # Se debe configurar el campo donde se le pasa el objeto de shop con el mismo nombre que el backref.
             new_shopify_credential.save_to_db()
 
             account_uuid = str(uuid.uuid4())
             beetrack_api_key = session["beetrack_api_key"]
-            new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop=shop_obj)
+            new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=shop_obj)
             new_beetrack_credential.save_to_db()
 
             return redirect('/webhooks')
