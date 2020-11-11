@@ -1,6 +1,5 @@
 from db import db
 
-# Shopify credentials table
 class ShopifyCredentialsModel(db.Model):
     __tablename__ = "shopify_credentials"
     id = db.Column(db.Integer, primary_key = True , autoincrement = True)
@@ -17,11 +16,15 @@ class ShopifyCredentialsModel(db.Model):
         self.shop_id_shopify = shop_id_shopify
 
     def json(self):
-        return {'token': self.token, 'shop_id': self.shop_id}
+        return {'token': self.token}
 
     @classmethod
     def find_by_user_name(cls, user_name):
         return cls.query.filter_by(user_name= user_name).first()
+
+    @classmethod
+    def find_by_shop_id(cls, shop_id):
+        return cls.query.filter_by(shop_id= shop_id).first()
 
     def save_to_db(self):
         db.session.add(self)

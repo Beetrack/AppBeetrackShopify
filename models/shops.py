@@ -1,6 +1,5 @@
 from db import db
 
-# Shops table
 class ShopsModel(db.Model):
     __tablename__ = 'shops'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

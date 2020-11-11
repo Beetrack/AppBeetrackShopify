@@ -1,6 +1,5 @@
 from db import db
 
-# Beetrack credentials table
 class BeetrackCredentialsModel(db.Model):
 
     __tablename__ = "beetrack_credentials"
@@ -24,6 +23,10 @@ class BeetrackCredentialsModel(db.Model):
     @classmethod
     def find_by_uuid(cls, account_uuid):
         return cls.query.filter_by(account_uuid= account_uuid).first()
+
+    @classmethod
+    def find_by_shop_id(cls, shop_id):
+        return cls.query.filter_by(shop_id= shop_id).first()
 
     def save_to_db(self):
         print(self.shop_id_beetrack)
