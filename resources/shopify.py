@@ -4,9 +4,9 @@ from models.shopify import ShopifyCredentialsModel
 class Shopify(Resource):
 
     def get(self, user_name):
-        shopify_credatials = ShopifyCredentialsModel.find_by_user_name(user_name)
-        if shopify_credatials:
-            return shopify_credatials.json()
+        shopify_credentials = ShopifyCredentialsModel.find_by_user_name(user_name)
+        if shopify_credentials:
+            return shopify_credentials.json()
         return {'message': 'Shopify credentials not found'}, 404
 
     

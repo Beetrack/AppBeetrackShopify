@@ -9,14 +9,22 @@ from db import db
 from models.shops import ShopsModel
 from models.shopify import ShopifyCredentialsModel
 from models.beetrack import BeetrackCredentialsModel
+from resources.beetrack import Beetrack
+from resources.shopify import Shopify
+from flask_restful import Api
+
 
 app = Flask(__name__)
-app.debug = True
 app.secret_key = '12334abcd'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(
     cfg.DB_CFG['DB_USER_NAME'], cfg.DB_CFG['DB_PASS'], cfg.DB_CFG['DB_HOST'], cfg.DB_CFG['DB_NAME'])
 # Migration
 #migrate = Migrate(app, db)
+api = Api(app)
+
+api.add_resource(Shopify, '/shopify_credentials/<string:user_name>')
+api.add_resource(Beetrack, '/beetrack_credentials/<string:account_uuid>')
+
 
 @app.route('/configuration', methods= ['GET', 'POST'])
 def add_api_key():
@@ -59,10 +67,11 @@ def connect():
             code = request.args.get("code")
             get_shopify_token = ShopifyApiHandler(shop).get_access_token(code)
             session['shopify_token'] = get_shopify_token
-            new_shop = ShopsModel(name= shop)
+            new_shop = ShopsModel(name=shop)
             new_shop.save_to_db()
 
             shop_id = new_shop.id
+            print(shop_id)
             user_name = new_shop.name
             shop_obj = ShopsModel.query.get(shop_id)
             new_shopify_credential = ShopifyCredentialsModel(user_name=user_name, token=get_shopify_token, shop_id_shopify=shop_obj)

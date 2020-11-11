@@ -8,7 +8,6 @@ class BeetrackCredentialsModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     api_key = db.Column(db.String(255))
     account_uuid = db.Column(db.String(255))
-
     shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
 
     def __repr__(self):
@@ -18,7 +17,6 @@ class BeetrackCredentialsModel(db.Model):
         self.api_key = api_key
         self.account_uuid = account_uuid
         self.shop_id_beetrack = shop_id_beetrack
-        # Eliminar el campo self.shop del __init__ y pasarcelo en la funcion save_to_db el objeto de shop
 
     def json(self):
         return {'api_key': self.api_key, 'account_uuid': self.account_uuid}

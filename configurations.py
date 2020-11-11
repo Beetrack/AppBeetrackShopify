@@ -1,10 +1,9 @@
 import os
 
 class Configurations():
-
     SECRET_KEY = "1234abcd"
     HOST = "localhost:5000"
-
+    
     SHOPIFY_CFG = {
         'API_KEY' : os.environ.get('API_KEY_SHOPIFY'),
         'API_SECRET' : os.environ.get('API_SECRET_SHOPIFY'),
@@ -13,7 +12,6 @@ class Configurations():
         'REDIRECT_URI' : 'http://' + HOST + '/connect',
         'SCOPE' : 'write_orders'
     }
-
     DB_CFG = {
         'DB_NAME' : os.environ.get('SHOPIFY_DB_NAME'),
         'DB_USER_NAME' : os.environ.get('SHOPIFY_DB_USER'),
