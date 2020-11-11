@@ -6,8 +6,8 @@ class ShopsModel(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable= False, unique= True)
 
-    shopify_credentials = db.relationship('ShopifyCredentialsModel')
-    beetrack_credentials = db.relationship('BeetrackCredentialsModel')
+    shopify_credentials = db.relationship('ShopifyCredentialsModel', backref = 'shop_id_shopify', lazy = 'select')
+    beetrack_credentials = db.relationship('BeetrackCredentialsModel', backref = 'shop_id_beetrack', lazy = 'select')
 
     def __repr__(self):
         return 'Shop ' + str(self.id)

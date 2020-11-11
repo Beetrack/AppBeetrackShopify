@@ -21,9 +21,5 @@ class ShopifyCredentialsModel(db.Model):
         return cls.query.filter_by(user_name= user_name).first()
 
     def save_to_db(self):
-<<<<<<< HEAD
-=======
-        print(self.shop_id_shopify)
->>>>>>> 9173a250773e41a383c352b739d02c0dd140fe0c
         db.session.add(self)
         db.session.commit()
