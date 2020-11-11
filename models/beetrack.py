@@ -14,10 +14,11 @@ class BeetrackCredentialsModel(db.Model):
     def __repr__(self):
         return 'Beetrack_credential ' + str(self.id)
 
-    def __init__(self, api_key, account_uuid, shop):
+    def __init__(self, api_key, account_uuid, shop_id_beetrack):
         self.api_key = api_key
         self.account_uuid = account_uuid
-        self.shop = shop 
+        self.shop_id_beetrack = shop_id_beetrack
+        # Eliminar el campo self.shop del __init__ y pasarcelo en la funcion save_to_db el objeto de shop
 
     def json(self):
         return {'api_key': self.api_key, 'account_uuid': self.account_uuid}
@@ -27,7 +28,7 @@ class BeetrackCredentialsModel(db.Model):
         return cls.query.filter_by(account_uuid= account_uuid).first()
 
     def save_to_db(self):
-        print(self.shop)
+        print(self.shop_id_beetrack)
         db.session.add(self)
         db.session.commit()
 
