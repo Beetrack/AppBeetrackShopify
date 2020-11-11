@@ -5,67 +5,22 @@ from configurations import Configurations as cfg
 from api.shopify import ShopifyApiHandler
 from api.beetrack import BeetrackApiHandler
 import mysql.connector, os, ipdb, json, requests, uuid
+from db import db
+from models.shops import ShopsModel
+from models.shopify import ShopifyCredentialsModel
+from models.beetrack import BeetrackCredentialsModel
 
-
+# Init app
 app = Flask(__name__)
+# Turn app debugger
 app.debug = True
+#
 app.secret_key = '12334abcd'
+# Batabase
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(
     cfg.DB_CFG['DB_USER_NAME'], cfg.DB_CFG['DB_PASS'], cfg.DB_CFG['DB_HOST'], cfg.DB_CFG['DB_NAME'])
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-class Shops(db.Model):
-
-    __tablename__ = 'shops'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), nullable= False, unique= True)
-    shopify_credentials = db.relationship('Shopify_credentials', backref='shop_id_shopify', lazy='select')
-    beetrack_credentials = db.relationship('Beetrack_credentials', backref='shop_id_beetrack', lazy='select')
-    homologation_configurations = db.relationship('Homologation_configurations', backref='shop_id_homo', lazy='select')
-
-
-    def __repr__(self):
-        return 'Shop ' + str(self.id)
-
-class Shopify_credentials(db.Model):
-
-    __tablename__ = "shopify_credentials"
-
-    id = db.Column(db.Integer,primary_key=True ,autoincrement=True)
-    user_name = db.Column(db.String(255))
-    token = db.Column(db.String(255))
-
-    shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
-
-    def __repr__(self):
-        return 'Shopify_credential ' + str(self.id)
-
-class Beetrack_credentials(db.Model):
-
-    __tablename__ = "beetrack_credentials"
-
-    id = db.Column(db.Integer,primary_key=True ,autoincrement=True)
-    api_key = db.Column(db.String(255))
-    account_uuid = db.Column(db.String(255))
-
-    shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
-
-    def __repr__(self):
-        return 'Beetrack_credential ' + str(self.id)
-
-class Homologation_configurations(db.Model):
-
-    __tablename__ = "omologation_configurations"
-
-    id = db.Column(db.Integer,primary_key=True ,autoincrement=True)
-    account_configuration = db.Column(db.Text())
-
-    shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
-
-    def __repr__(self):
-        return 'Homologation_configuration ' + str(self.id)
+# Migration
+#migrate = Migrate(app, db)
 
 @app.route('/configuration', methods= ['GET', 'POST'])
 def add_api_key():
@@ -108,22 +63,20 @@ def connect():
             code = request.args.get("code")
             get_shopify_token = ShopifyApiHandler(shop).get_access_token(code)
             session['shopify_token'] = get_shopify_token
-            new_shop = Shops(name=shop)
-            db.session.add(new_shop)
-            db.session.commit()
+            new_shop = ShopsModel(name= shop)
+            new_shop.save_to_db()
 
             shop_id = new_shop.id
             user_name = new_shop.name
-            shop_obj = Shops.query.get(shop_id)
-            new_shopify_credential = Shopify_credentials(user_name=user_name, token=get_shopify_token, shop_id_shopify=shop_obj)
-            db.session.add(new_shopify_credential)
-            db.session.commit()
+            shop_obj = ShopsModel.query.get(shop_id)
+            new_shopify_credential = ShopifyCredentialsModel(user_name=user_name, token=get_shopify_token, shop=shop_obj)
+            new_shopify_credential.save_to_db()
 
             account_uuid = str(uuid.uuid4())
             beetrack_api_key = session["beetrack_api_key"]
-            new_beetrack_credential = Beetrack_credentials(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=shop_obj)
-            db.session.add(new_beetrack_credential)
-            db.session.commit()
+            new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop=shop_obj)
+            new_beetrack_credential.save_to_db()
+
             return redirect('/webhooks')
         else: 
             return render_template('configuration.html')
@@ -145,6 +98,8 @@ def webhooks_shopify():
     else:
         return redirect('/connect')
 
-
+# Run Server
 if __name__ == "__main__":
-    app.run(debug= True, port= 5000)   
+    db.init_app(app)
+    app.run(debug= True, port= 5000)
+
