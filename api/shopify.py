@@ -19,7 +19,6 @@ class ShopifyApiHandler:
         r = requests.post(url, data=params)
         resp_dict = json.loads(r.text)
         access_token = resp_dict.get("access_token")
-        
         return access_token
 
     def create_webhook(self, api_key):

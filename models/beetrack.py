@@ -8,7 +8,6 @@ class BeetrackCredentialsModel(db.Model):
     id = db.Column(db.Integer,primary_key=True ,autoincrement=True)
     api_key = db.Column(db.String(255))
     account_uuid = db.Column(db.String(255))
-
     shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
 
     def __repr__(self):
