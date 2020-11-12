@@ -52,6 +52,7 @@ def install():
             cfg.SHOPIFY_CFG['SCOPE'],
             cfg.SHOPIFY_CFG['REDIRECT_URI']
             )
+        print(auth_url)
         return redirect(auth_url)
     else: 
         return Response(response="Error: Parameter shop Not Found", status= 500)
