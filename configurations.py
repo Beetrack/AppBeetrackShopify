@@ -1,8 +1,10 @@
 import os
 
 class Configurations():
-    SECRET_KEY = "1234abcd"
+
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     HOST = "localhost:5000"
+    
     
     SHOPIFY_CFG = {
         'API_KEY' : os.environ.get('API_KEY_SHOPIFY'),

@@ -15,11 +15,10 @@ from flask_restful import Api
 
 
 app = Flask(__name__)
-app.secret_key = '12334abcd'
+app.secret_key = cfg.SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(
     cfg.DB_CFG['DB_USER_NAME'], cfg.DB_CFG['DB_PASS'], cfg.DB_CFG['DB_HOST'], cfg.DB_CFG['DB_NAME'])
-# Migration
-#migrate = Migrate(app, db)
+
 api = Api(app)
 
 api.add_resource(Shopify, '/shopify_credentials/<string:user_name>')
@@ -70,16 +69,13 @@ def connect():
             new_shop = ShopsModel(name=shop)
             new_shop.save_to_db()
 
-            shop_id = new_shop.id
-            print(shop_id)
             user_name = new_shop.name
-            shop_obj = ShopsModel.query.get(shop_id)
-            new_shopify_credential = ShopifyCredentialsModel(user_name=user_name, token=get_shopify_token, shop_id_shopify=shop_obj)
+            new_shopify_credential = ShopifyCredentialsModel(user_name=user_name, token=get_shopify_token, shop_id_shopify=new_shop)
             new_shopify_credential.save_to_db()
 
             account_uuid = str(uuid.uuid4())
             beetrack_api_key = session["beetrack_api_key"]
-            new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=shop_obj)
+            new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=new_shop)
             new_beetrack_credential.save_to_db()
 
             return redirect('/webhooks')
@@ -103,7 +99,7 @@ def webhooks_shopify():
     else:
         return redirect('/connect')
 
-# Run Server
+
 if __name__ == "__main__":
     db.init_app(app)
     app.run(debug= True, port= 5000)
