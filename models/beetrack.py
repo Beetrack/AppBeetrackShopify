@@ -29,6 +29,6 @@ class BeetrackCredentialsModel(db.Model):
         return cls.query.filter_by(shop_id= shop_id).first()
 
     def save_to_db(self):
-        print(self.shop_id_beetrack)
         db.session.add(self)
         db.session.commit()
+
