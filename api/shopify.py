@@ -1,6 +1,4 @@
-import requests, json, sys
-sys.path.insert(1, '/Users/adipr/OneDrive/Documentos/Python/BeeTrack/Integrations/Shopify/AppBeetrackShopify')
-
+import requests, json
 from configurations import Configurations as cfg
 
 class ShopifyApiHandler:
@@ -16,10 +14,10 @@ class ShopifyApiHandler:
             "client_secret" : cfg.SHOPIFY_CFG['API_SECRET'],
             "code" : code
             }
-        r = requests.post("https://{0}/admin/oauth/access_token".format(self.shop), data=params)
+        url = "https://{0}/admin/oauth/access_token".format(self.shop)
+        r = requests.post(url, data=params)
         resp_dict = json.loads(r.text)
         access_token = resp_dict.get("access_token")
-        
         return access_token
 
     def create_webhook(self, api_key):
