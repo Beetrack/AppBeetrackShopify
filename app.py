@@ -1,17 +1,16 @@
+import mysql.connector, os, json, requests, uuid
 from flask import Flask, request, redirect, render_template, session, Response
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from configurations import Configurations as cfg
 from api.shopify import ShopifyApiHandler
 from api.beetrack import BeetrackApiHandler
-import mysql.connector, os, ipdb, json, requests, uuid
-from db import db
 from models.shops import ShopsModel
 from models.shopify import ShopifyCredentialsModel
 from models.beetrack import BeetrackCredentialsModel
 from resources.beetrack import Beetrack
 from resources.shopify import Shopify
 from flask_restful import Api
+from db import db
 
 
 app = Flask(__name__)
@@ -34,12 +33,11 @@ def add_api_key():
 
     elif request.method == 'POST':
         beetrack_api_key = request.form['api_key']
-        verify = BeetrackApiHandler(beetrack_api_key).verify_apikey()
-        if verify == True:
+        verify_beetrack_account = BeetrackApiHandler(beetrack_api_key).verify_apikey()
+        if verify_beetrack_account == True:
             session["beetrack_api_key"] = beetrack_api_key
             return redirect('/install')
         else:
-            #Crear un template para manejar el error de llave API
             return render_template('error.html')
     else:
          return render_template('error.html')
@@ -62,19 +60,22 @@ def install():
 def connect():
     if "shop" in session:
         if not 'access_token' in session:
+
             shop = session["shop"]
+            beetrack_api_key = session["beetrack_api_key"]
             code = request.args.get("code")
+
             get_shopify_token = ShopifyApiHandler(shop).get_access_token(code)
             session['shopify_token'] = get_shopify_token
+
             new_shop = ShopsModel(name=shop)
             new_shop.save_to_db()
 
-            user_name = new_shop.name
-            new_shopify_credential = ShopifyCredentialsModel(user_name=user_name, token=get_shopify_token, shop_id_shopify=new_shop)
+            new_shopify_credential = ShopifyCredentialsModel(user_name=shop, token=get_shopify_token, shop_id_shopify=new_shop)
             new_shopify_credential.save_to_db()
 
             account_uuid = str(uuid.uuid4())
-            beetrack_api_key = session["beetrack_api_key"]
+
             new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=new_shop)
             new_beetrack_credential.save_to_db()
 

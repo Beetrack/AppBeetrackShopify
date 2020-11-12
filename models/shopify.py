@@ -1,7 +1,9 @@
 from db import db
 
 class ShopifyCredentialsModel(db.Model):
+
     __tablename__ = "shopify_credentials"
+    
     id = db.Column(db.Integer, primary_key = True , autoincrement = True)
     user_name = db.Column(db.String(255))
     token = db.Column(db.String(255))
@@ -15,7 +17,7 @@ class ShopifyCredentialsModel(db.Model):
         self.token = token
         self.shop_id_shopify = shop_id_shopify
 
-    def json(self):
+    def shopify_obj_jsonify(self):
         return {'token': self.token}
 
     @classmethod

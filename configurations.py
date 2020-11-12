@@ -5,7 +5,6 @@ class Configurations():
     SECRET_KEY = os.environ.get('SECRET_KEY')
     HOST = "localhost:5000"
     
-    
     SHOPIFY_CFG = {
         'API_KEY' : os.environ.get('API_KEY_SHOPIFY'),
         'API_SECRET' : os.environ.get('API_SECRET_SHOPIFY'),

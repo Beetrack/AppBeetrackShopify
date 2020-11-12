@@ -1,7 +1,9 @@
 from db import db
 
 class ShopsModel(db.Model):
+
     __tablename__ = 'shops'
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable= False, unique= True)
 

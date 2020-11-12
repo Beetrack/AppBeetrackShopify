@@ -17,8 +17,8 @@ class BeetrackCredentialsModel(db.Model):
         self.account_uuid = account_uuid
         self.shop_id_beetrack = shop_id_beetrack
 
-    def json(self):
-        return {'api_key': self.api_key, 'account_uuid': self.account_uuid}
+    def beetrack_obj_jsonify(self):
+        return {'api_key': self.api_key}
 
     @classmethod
     def find_by_uuid(cls, account_uuid):
@@ -32,5 +32,3 @@ class BeetrackCredentialsModel(db.Model):
         print(self.shop_id_beetrack)
         db.session.add(self)
         db.session.commit()
-
-    
