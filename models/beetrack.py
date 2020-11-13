@@ -18,7 +18,7 @@ class BeetrackCredentialsModel(db.Model):
         self.shop_id_beetrack = shop_id_beetrack
 
     def beetrack_obj_jsonify(self):
-        return {'api_key': self.api_key}
+        return {'beetrack_api_key': self.api_key}
 
     @classmethod
     def find_by_uuid(cls, account_uuid):
