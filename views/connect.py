@@ -1,4 +1,5 @@
 import uuid
+from db import db
 from flask import Blueprint, request, session, render_template, redirect
 from api.shopify import ShopifyApiHandler
 from models.shops import ShopsModel
@@ -27,7 +28,7 @@ def connect():
 
             account_uuid = str(uuid.uuid4())
 
-            new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=new_shop)
+            new_beetrack_credential = BeetrackCredentialsModel(db.session, api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=new_shop)
             new_beetrack_credential.save_to_db()
 
             return redirect('/webhooks')

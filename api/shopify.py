@@ -6,7 +6,6 @@ class ShopifyApiHandler:
     def __init__(self, shop):
         self.shop = shop
         self.base_url = 'https://{}/admin/api/2020-07/'.format(self.shop)
-        
 
     def get_access_token(self, code):
         params = {
@@ -25,6 +24,7 @@ class ShopifyApiHandler:
             'X-Shopify-Access-Token': api_key,
             'Content-Type': 'application/json'
         }
+        #Dejar en variable de ambiente
         params = {
             "webhook": {
                 "topic": "orders/fulfilled",

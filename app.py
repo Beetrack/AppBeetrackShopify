@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from configurations import Configurations as cfg
+from flask_migrate import Migrate
 
 from resources.beetrack import Beetrack
 from resources.shopify import Shopify
@@ -20,11 +21,14 @@ app.register_blueprint(connection)
 app.register_blueprint(webhooks)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(
     cfg.DB_CFG['DB_USER_NAME'], cfg.DB_CFG['DB_PASS'], cfg.DB_CFG['DB_HOST'], cfg.DB_CFG['DB_NAME'])
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 api = Api(app)
 api.add_resource(Shopify, '/shopify_credentials/<string:user_name>')
 api.add_resource(Beetrack, '/beetrack_credentials/<string:account_uuid>')
 
+migrate = Migrate(app, db)
+db.init_app(app)
+
 if __name__ == "__main__":
-    db.init_app(app)
     app.run(debug= True, port= 5000)

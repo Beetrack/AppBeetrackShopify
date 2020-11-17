@@ -16,10 +16,7 @@ class ShopsModel(db.Model):
     def __init__(self, name):
         self.name = name 
 
-    @classmethod
-    def find_by_name(cls, name):
-        return cls.query.filter_by(name=name).first()
-
+    #Dejar en una clase intermedia
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
