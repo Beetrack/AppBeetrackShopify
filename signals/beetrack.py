@@ -1,5 +1,6 @@
 import ipdb
 
-def after_commit(session):
+def before_commit(session):
     ipdb.set_trace()
+    print("Hola")
     print(session)

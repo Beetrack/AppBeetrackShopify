@@ -8,7 +8,7 @@ def webhooks_shopify():
     if 'shop' and 'shopify_token' in session:
         shop = session["shop"]
         shopify_token = session['shopify_token']
-        create_shopify_webhook = ShopifyApiHandler(shop).create_webhook(shopify_token,)
+        create_shopify_webhook = ShopifyApiHandler(shop).create_webhook(shopify_token)
         if create_shopify_webhook:
             return render_template('connected.html')
         else:

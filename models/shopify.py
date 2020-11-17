@@ -19,8 +19,12 @@ class ShopifyCredentialsModel(db.Model):
         self.token = token
         self.shop_id_shopify = shop_id_shopify
 
-    def shopify_obj_jsonify(self):
-        return {'shopify_token': self.token}
+    def serialize(self):
+        return {
+            "user_name": self.user_name,
+            "token": self.token,
+            "shop_id_shopify": self.shop_id
+            }
 
     @classmethod
     def find_by_user_name(cls, user_name):

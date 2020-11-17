@@ -8,5 +8,5 @@ class Beetrack(Resource):
         beetrack_credential_obj = BeetrackCredentialsModel.find_by_uuid(account_uuid)
         shopify_credential_obj = beetrack_credential_obj.shop.shopify_credentials.pop()
         if beetrack_credential_obj or shopify_credential_obj:
-            return shopify_credential_obj.shopify_obj_jsonify()
+            return shopify_credential_obj.serialize()
         return {'message': 'Shopify credentials were not found for these Beetrack uuid account'}, 404
