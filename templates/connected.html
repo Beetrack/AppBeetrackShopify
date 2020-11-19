@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Connected{% endblock %}
 {% block content %}
-<p>Succesful Connection to Beetrack!</p>
+<section class="jumbotron text-center">
+    <div class="container">
+        <img src="{{url_for('static', filename='beetrack2.png')}}" class="align-self-start mr-3" alt="" width="81" height="72">
+      <h1>¡Bienvenido, conexión exitosa a Beetrack!</h1>
+      <p class="lead text-muted">Ahora podrás ...</p>
+  </section>
 {% endblock %}

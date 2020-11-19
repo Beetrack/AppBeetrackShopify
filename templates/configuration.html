@@ -1,7 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Login Page {% endblock %}
+{% block title %}Configuration Page{% endblock %}
 
 {% block content %}
+
+<section class="jumbotron text-center">
+    <div class="container">
+        <img src="{{url_for('static', filename='beetrack2.png')}}" class="align-self-start mr-3" alt="" width="81" height="72">
+      <h1>Configura tu llave API</h1>
+      <p class="lead text-muted">Bienvenido <b>{{ shop }}</p>
+      <p class="lead text-muted">Para consigurar tu llave API debes .... </p>
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for msg in messages %}
@@ -9,10 +16,13 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-<form action= '/configuration' method= 'POST'>
-    <label for="api_key">API Key:</label> 
-    <p><input type="text" name='api_key' id='api_key'></p>
-    <br>
-    <p><input type="submit" value="Submit" /></p>    
-    </form>
+    <form action= '/configuration' method= 'POST'>
+        <div class="form-group">
+          <label for="APIKeyLabel">Confirma tu llave API de Beetrack</label>
+        <p><input type="text" class="form-control" name='api_key' id="api_key" aria-describedby="emailHelp"></p> 
+        </div>
+        <p><button type="submit" class="btn btn-warning">Enviar</button></p> 
+      </form>
+    </div>
+    </section>
 {% endblock %}
