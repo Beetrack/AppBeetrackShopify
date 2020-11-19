@@ -24,5 +24,3 @@ def verify_api_key(beetrack_api_key):
     else:
         flash("Wrong API Key: {}, check your Beetrack account configurations.".format(beetrack_api_key))
         return render_template('configuration.html')
-
-
