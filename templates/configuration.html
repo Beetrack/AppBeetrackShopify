@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Login Page{% endblock %}
+{% block title %}Configuration Page{% endblock %}
 
 {% block content %}
-<div class="py-5 text-center">
-    <img class="d-block mx-auto mb-4" src="{{url_for('static', filename='beetrack2.png')}}" alt="" width="82" height="72">
-    <h2>Configura tu llave API</h2>
-    <p class="lead">Bienvenido <b>{{ shop }}</b></p>
-    <p class="lead">Para consigurar tu llave API debes ....</p>
-  </div>
+
+<section class="jumbotron text-center">
+    <div class="container">
+        <img src="{{url_for('static', filename='beetrack2.png')}}" class="align-self-start mr-3" alt="" width="81" height="72">
+      <h1>Configura tu llave API</h1>
+      <p class="lead text-muted">Bienvenido <b>{{ shop }}</p>
+      <p class="lead text-muted">Para consigurar tu llave API debes .... </p>
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for msg in messages %}
@@ -22,4 +23,6 @@
         </div>
         <p><button type="submit" class="btn btn-warning">Enviar</button></p> 
       </form>
+    </div>
+    </section>
 {% endblock %}
