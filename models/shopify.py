@@ -1,7 +1,8 @@
 from db import db
 from models.shops import ShopsModel
+from models.properties import Properties
 
-class ShopifyCredentialsModel(db.Model):
+class ShopifyCredentialsModel(db.Model, Properties):
 
     __tablename__ = "shopify_credentials"
     
@@ -18,6 +19,7 @@ class ShopifyCredentialsModel(db.Model):
         self.user_name = user_name
         self.token = token
         self.shop_id_shopify = shop_id_shopify
+        Properties.__init__(self)
 
     def serialize(self):
         return {
@@ -29,7 +31,3 @@ class ShopifyCredentialsModel(db.Model):
     @classmethod
     def find_by_user_name(cls, user_name):
         return cls.query.filter_by(user_name= user_name).first()
-
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()

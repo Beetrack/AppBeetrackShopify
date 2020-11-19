@@ -1,8 +1,10 @@
 from db import db
 from sqlalchemy import event, exists
 from signals.beetrack import before_commit
+from models.properties import Properties
 
-class ShopsModel(db.Model):
+
+class ShopsModel(db.Model, Properties):
 
     __tablename__ = 'shops'
 
@@ -17,9 +19,5 @@ class ShopsModel(db.Model):
 
     def __init__(self, name):
         self.name = name
+        Properties.__init__(self)
         #event.listen(session, 'before_commit', before_commit)
-
-    #Dejar en una clase intermedia
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
