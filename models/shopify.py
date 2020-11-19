@@ -1,4 +1,5 @@
 from db import db
+from models.shops import ShopsModel
 
 class ShopifyCredentialsModel(db.Model):
 
@@ -8,6 +9,7 @@ class ShopifyCredentialsModel(db.Model):
     user_name = db.Column(db.String(255))
     token = db.Column(db.String(255))
     shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
+    shop = db.relationship("ShopsModel", back_populates = "shopify_credentials")
 
     def __repr__(self):
         return 'Shopify_credential ' + str(self.id)
@@ -17,16 +19,16 @@ class ShopifyCredentialsModel(db.Model):
         self.token = token
         self.shop_id_shopify = shop_id_shopify
 
-    def shopify_obj_jsonify(self):
-        return {'token': self.token}
+    def serialize(self):
+        return {
+            "user_name": self.user_name,
+            "token": self.token,
+            "shop_id_shopify": self.shop_id
+            }
 
     @classmethod
     def find_by_user_name(cls, user_name):
         return cls.query.filter_by(user_name= user_name).first()
-
-    @classmethod
-    def find_by_shop_id(cls, shop_id):
-        return cls.query.filter_by(shop_id= shop_id).first()
 
     def save_to_db(self):
         db.session.add(self)

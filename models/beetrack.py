@@ -8,6 +8,7 @@ class BeetrackCredentialsModel(db.Model):
     api_key = db.Column(db.String(255))
     account_uuid = db.Column(db.String(255))
     shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
+    shop = db.relationship("ShopsModel", back_populates = "beetrack_credentials")
 
     def __repr__(self):
         return 'Beetrack_credential ' + str(self.id)
@@ -17,18 +18,17 @@ class BeetrackCredentialsModel(db.Model):
         self.account_uuid = account_uuid
         self.shop_id_beetrack = shop_id_beetrack
 
-    def beetrack_obj_jsonify(self):
-        return {'api_key': self.api_key}
+    def serialize(self):
+        return {
+            "api_key": self.api_key,
+            "account_uuid": self.account_uuid,
+            "shop_id_beetrack": self.shop_id
+            }
 
     @classmethod
     def find_by_uuid(cls, account_uuid):
-        return cls.query.filter_by(account_uuid= account_uuid).first()
-
-    @classmethod
-    def find_by_shop_id(cls, shop_id):
-        return cls.query.filter_by(shop_id= shop_id).first()
+        return cls.query.filter_by(account_uuid = account_uuid).first()
 
     def save_to_db(self):
-        print(self.shop_id_beetrack)
         db.session.add(self)
         db.session.commit()

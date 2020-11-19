@@ -4,10 +4,9 @@ class Configurations():
 
     SECRET_KEY = os.environ.get('SECRET_KEY')
     HOST = "localhost:5000"
-    
     SHOPIFY_CFG = {
-        'API_KEY' : "9d4b7691f204f97e02489042392fb373",
-        'API_SECRET' : "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",
+        'API_KEY' : os.environ.get('API_KEY_SHOPIFY'),
+        'API_SECRET' : os.environ.get('API_SECRET_SHOPIFY'),
         'APP_HOME' : 'http://' + HOST,
         'CALLBACK_URL' : 'http://' + HOST + '/install',
         'REDIRECT_URI' : 'http://' + HOST + '/connect',
