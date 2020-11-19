@@ -17,6 +17,7 @@ def connect():
                 code = request.args.get("code")
                 shop = session["shop"]
                 new_shop = ShopsModel(name=shop)
+                ipdb.set_trace()
                 new_shop.save_to_db()
                 get_shopify_token = ShopifyApiHandler(shop).get_access_token(code)
                 session['shopify_token'] = get_shopify_token
