@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Login Page{% endblock %}
+
+{% block content %}
+<p>Welcome <b>{{ shop }}</b></p>
+<form action= '/index' method= 'POST'>
+    <label for="continue">Continuar instalando la APP -></label>
+    <button type="submit" class="btn btn-warning">Click Aquí</button>
+</form>
+{% endblock %}

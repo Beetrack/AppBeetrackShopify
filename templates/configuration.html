@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Login Page {% endblock %}
+{% block title %}Login Page{% endblock %}
 
 {% block content %}
+<p>Welcome <b>{{ shop }}</b></p>
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for msg in messages %}
@@ -9,10 +10,11 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-<form action= '/configuration' method= 'POST'>
-    <label for="api_key">API Key:</label> 
-    <p><input type="text" name='api_key' id='api_key'></p>
-    <br>
-    <p><input type="submit" value="Submit" /></p>    
-    </form>
+    <form action= '/configuration' method= 'POST'>
+        <div class="form-group">
+          <label for="APIKeyLabel">Confirma tu llave API de Beetrack</label>
+        <p><input type="text" class="form-control" name='api_key' id="api_key" aria-describedby="emailHelp"></p> 
+        </div>
+        <p><button type="submit" class="btn btn-warning">Enviar</button></p> 
+      </form>
 {% endblock %}

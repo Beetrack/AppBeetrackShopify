@@ -9,6 +9,7 @@ from flask_migrate import Migrate
 from resources.beetrack import Beetrack
 from resources.shopify import Shopify
 
+from views.index import index
 from views.configuration import configuration
 from views.install import installation
 from views.connect import connection
@@ -18,6 +19,7 @@ import ipdb
 app = Flask(__name__)
 app.secret_key = cfg.SECRET_KEY
 
+app.register_blueprint(index)
 app.register_blueprint(configuration)
 app.register_blueprint(installation)
 app.register_blueprint(connection)
