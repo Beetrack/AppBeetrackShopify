@@ -17,7 +17,8 @@ class BeetrackCredentialsModel(db.Model):
         self.account_uuid = account_uuid
         self.shop_id_beetrack = shop_id_beetrack
 
-    def beetrack_obj_jsonify(self):
+    @property
+    def serialize(self):
         return {'api_key': self.api_key}
 
     @classmethod
