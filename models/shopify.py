@@ -1,6 +1,8 @@
 from db import db
+from sqlalchemy import event
 from models.shops import ShopsModel
 from models.properties import Properties
+import ipdb
 
 class ShopifyCredentialsModel(db.Model, Properties):
 
