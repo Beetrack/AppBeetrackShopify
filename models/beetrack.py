@@ -1,6 +1,7 @@
 from db import db
+from models.properties import Properties
 
-class BeetrackCredentialsModel(db.Model):
+class BeetrackCredentialsModel(db.Model, Properties):
 
     __tablename__ = "beetrack_credentials"
 
@@ -17,7 +18,8 @@ class BeetrackCredentialsModel(db.Model):
         self.api_key = api_key
         self.account_uuid = account_uuid
         self.shop_id_beetrack = shop_id_beetrack
-
+        Properties.__init__(self)
+    
     def serialize(self):
         return {
             "api_key": self.api_key,
@@ -28,7 +30,3 @@ class BeetrackCredentialsModel(db.Model):
     @classmethod
     def find_by_uuid(cls, account_uuid):
         return cls.query.filter_by(account_uuid = account_uuid).first()
-
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
