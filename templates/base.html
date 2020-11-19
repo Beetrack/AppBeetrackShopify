@@ -5,7 +5,36 @@
     <title>{% block title %}App Shopify - Beetrack LastMile{% endblock %}</title>
     </head>
     <body>
-        <h3>Beetrack Website <span class="badge badge-secondary">New</span></h3>
+        <header>
+            <div class="collapse bg-dark" id="navbarHeader">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-8 col-md-7 py-4">
+                    <h4 class="text-white">Sobre Beetrack - LastMile</h4>
+                    <p class="text-muted">Somos experos en última milla. Visualiza en línea y en tiempo real el estado de cada una de las entregas, permitiéndonos brindarte el control de tu flota.</p>
+                  </div>
+                  <div class="col-sm-4 offset-md-1 py-4">
+                    <h4 class="text-white">Información</h4>
+                    <ul class="list-unstyled">
+                      <li><a href="#" class="text-white">Apoquindo 5550,</a></li>
+                      <li><a href="#" class="text-white">Piso 6, Las Condes, Chile</a></li>
+                      <li><a href="#" class="text-white">+562-2378-7209</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="navbar navbar-dark bg-dark shadow-sm">
+              <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand d-flex align-items-center">
+                  <strong>Beetrack</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+              </div>
+            </div>
+          </header>
             {% block content %}
             {% endblock %}
 

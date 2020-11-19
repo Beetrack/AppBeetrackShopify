@@ -2,7 +2,12 @@
 {% block title %}Login Page{% endblock %}
 
 {% block content %}
-<p>Welcome <b>{{ shop }}</b></p>
+<div class="py-5 text-center">
+    <img class="d-block mx-auto mb-4" src="{{url_for('static', filename='beetrack2.png')}}" alt="" width="82" height="72">
+    <h2>Configura tu llave API</h2>
+    <p class="lead">Bienvenido <b>{{ shop }}</b></p>
+    <p class="lead">Para consigurar tu llave API debes ....</p>
+  </div>
     {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for msg in messages %}

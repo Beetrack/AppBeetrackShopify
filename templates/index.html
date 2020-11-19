@@ -2,9 +2,18 @@
 {% block title %}Login Page{% endblock %}
 
 {% block content %}
-<p>Welcome <b>{{ shop }}</b></p>
-<form action= '/index' method= 'POST'>
-    <label for="continue">Continuar instalando la APP -></label>
-    <button type="submit" class="btn btn-warning">Click Aquí</button>
-</form>
+<section class="jumbotron text-center">
+    <div class="container">
+        <img src="{{url_for('static', filename='beetrack2.png')}}" class="align-self-start mr-3" alt="" width="81" height="72">
+      <h1>¡Bienvenido a la App LastMile - Shopify!</h1>
+      <p class="lead text-muted">Descargando esta App podrás conectar tu cuenta de Shopify con tu cuenta de LastMile de Beetrack.
+        Esta conexión te permitirá cargar de forma automática tus órdenes que estén en estado fulfilled como despachos dentro de tu
+        tu cuenta Beetrack para que puedas gestionar de la forma más óptima y eficiente, como también, ofrecerle a tus cliente la mejor experiencia Beetrack.
+        También podrás ver las gestiones sobre los despachos de tus órdenes dentro del timeline de Shopify, entregándote un mayor grado de visualización sobre el estado de tus órdenes.
+    </p>
+    <form action= '/index' method= 'POST'>
+        <p class="lead text-muted"><strong><label for="continue">Continua instalando nuestra APP</label></strong></p>
+        <button type="submit" class="btn btn-warning">Click Aquí</button>
+    </form>
+  </section>
 {% endblock %}
