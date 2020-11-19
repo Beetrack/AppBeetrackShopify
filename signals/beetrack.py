@@ -1,6 +1,7 @@
 import ipdb
+from flask import session
 
-def before_commit(session):
+def before_commit(object):
     ipdb.set_trace()
-    print("Hola")
-    print(session)
+    shop = session["shop"]
+    print(object)

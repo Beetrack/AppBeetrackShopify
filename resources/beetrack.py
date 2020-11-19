@@ -1,6 +1,5 @@
 from flask_restful import Resource
 from models.beetrack import BeetrackCredentialsModel
-from models.shopify import ShopifyCredentialsModel
 
 class Beetrack(Resource):
 

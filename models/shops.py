@@ -1,5 +1,5 @@
 from db import db
-from sqlalchemy import event
+from sqlalchemy import event, exists
 from signals.beetrack import before_commit
 
 class ShopsModel(db.Model):
@@ -15,9 +15,9 @@ class ShopsModel(db.Model):
     def __repr__(self):
         return 'Shop ' + str(self.id)
 
-    def __init__(self, session, name):
+    def __init__(self, name):
         self.name = name
-        event.listen(session, 'before_commit', before_commit) 
+        #event.listen(session, 'before_commit', before_commit)
 
     #Dejar en una clase intermedia
     def save_to_db(self):

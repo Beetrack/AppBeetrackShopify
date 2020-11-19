@@ -1,6 +1,5 @@
 import requests, json
 from configurations import Configurations as cfg
-import ipdb
 
 class ShopifyApiHandler:
 
@@ -35,7 +34,6 @@ class ShopifyApiHandler:
             }
         url = self.base_url + 'webhooks.json'
         r = requests.post(url= url, headers= headers, json= params)
-        ipdb.set_trace()
         if r.status_code == 201 or r.status_code == 422 :
             return True
         return False
