@@ -14,7 +14,6 @@ from views.configuration import configuration
 from views.install import installation
 from views.connect import connection
 from views.webhooks import webhooks
-from views.base import base
 
 app = Flask(__name__)
 app.secret_key = cfg.SECRET_KEY
@@ -24,7 +23,6 @@ app.register_blueprint(configuration)
 app.register_blueprint(installation)
 app.register_blueprint(connection)
 app.register_blueprint(webhooks)
-app.register_blueprint(base)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(
     cfg.DB_CFG['DB_USER_NAME'], cfg.DB_CFG['DB_PASS'], cfg.DB_CFG['DB_HOST'], cfg.DB_CFG['DB_NAME'])
