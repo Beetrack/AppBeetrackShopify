@@ -4,7 +4,37 @@
 <section class="jumbotron text-center">
     <div class="container">
         <img src="{{url_for('static', filename='beetrack2.png')}}" class="align-self-start mr-3" alt="" width="81" height="72">
-      <h1>¡Bienvenido, conexión exitosa a Beetrack!</h1>
-      <p class="lead text-muted">Ahora podrás ...</p>
+      <h1>¡Bienvenido, tu conexión con Beetrack ha sido exitosa!</h1>
+      <br>
+      <p class="lead text-muted">¡Ya solo falta el ultimo pazo para que completes tu conexión entre tus cuentas de Beetrack y Shopify! 
+        <br>
+        <br>
+        Para finalizar tu conexión debes de configurar un webhook dentro de tu cuenta de Beetrack. Para ello, redirígete a 
+        <a href="https://login.beetrack.com/sign_in?redirect_to=https://app.beetrack.com" target="_blank">login.beetrack.com</a> 
+        e inicia sesión con tus credenciales Beetrack.
+        <br>
+        Una vez que hayas entrado a tu cuenta beetrack, dirígete a Configuraciones -> Configuración avanzada -> 
+        Webhooks -> Crear nuevo webhook (botón con el signo “+”). 
+        <br>  
+        Para configurar el webhook utiliza el Url y los Headers que se presentan a continuación.
+        <br>  
+        Esto permitirá que tu cuenta de Beetrack se comunique en tiempo real con tu cuenta de Shopify.
+        <br> 
+      </p>
+      <div class="my-3 p-3 bg-white rounded shadow-sm">
+        <h1 align="left" class="lead text-muted">
+            Url = beetrack.shopify.com <br>
+            Headers = { <br>
+              Account Uuid : {{content}} <br>
+              Contetn Type : Application/json <br>
+            }
+        </h1>
+      </div>
+      <p class="lead text-muted">En caso de que necesites más información de como configurar un webhook en tu cuenta Beetrack, 
+        puedes dirígete al siguiente link <a href="https://developers.beetrack.com/cases/721059910" target="_blank">Beetrack webhooks</a> 
+        donde encontraras toda la documentación sobre este tema.</p>
+      <p>
+        <a class="btn btn-warning" href="https://{{session['shop']}}/admin" role="button"> Finalizar &raquo;</a>
+      </p>
   </section>
 {% endblock %}

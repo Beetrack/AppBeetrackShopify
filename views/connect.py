@@ -23,6 +23,7 @@ def connect():
                 new_shopify_credential.save_to_db()
                 beetrack_api_key = session["beetrack_api_key"]
                 account_uuid = str(uuid.uuid4())
+                session['account_uuid'] = account_uuid
                 new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=new_shop)
                 new_beetrack_credential.save_to_db()
                 return redirect('/webhooks')

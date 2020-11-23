@@ -1,4 +1,5 @@
 from db import db
+import requests
 from models.properties import Properties
 from sqlalchemy import event
 
@@ -27,14 +28,6 @@ class BeetrackCredentialsModel(db.Model, Properties):
             "account_uuid": self.account_uuid,
             "shop_id_beetrack": self.shop_id
             }
-
-    @event.listens_for(Beetrack, 'before_insert')
-    def validate_api_key(self):
-        r = requests.get('https://app.beetrack.com/api/external/v1/trucks', headers = {'Content-Type': 'application/json', 'X-AUTH-TOKEN': self.api_key})
-        if r.status_code == 200:
-            return True
-        else:
-            raise Exception('Invalid API Key')
 
     @classmethod
     def find_by_uuid(cls, account_uuid):
