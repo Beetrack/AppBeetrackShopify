@@ -10,7 +10,8 @@ def webhooks_shopify():
         shopify_token = session['shopify_token']
         create_shopify_webhook = ShopifyApiHandler(shop).create_webhook(shopify_token)
         if create_shopify_webhook:
-            return render_template('connected.html')
+            account_uuid_info = session['account_uuid']
+            return render_template('connected.html', content= account_uuid_info)
         else:
             return render_template('error.html')
     else:

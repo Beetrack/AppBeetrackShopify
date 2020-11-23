@@ -1,4 +1,5 @@
 from db import db
+import requests
 from models.properties import Properties
 from sqlalchemy import event
 
