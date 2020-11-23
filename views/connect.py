@@ -1,5 +1,6 @@
 import uuid
 from db import db
+import ipdb
 from flask import Blueprint, request, session, render_template, redirect
 from api.shopify import ShopifyApiHandler
 from models.shops import ShopsModel
@@ -14,9 +15,10 @@ def connect():
         if not 'access_token' in session:
             try:
                 code = request.args.get("code")
+                ipdb.set_trace()
                 shop = session["shop"]
                 new_shop = ShopsModel(name=shop)
-                new_shop.save_to_db()
+                #new_shop.save_to_db()
                 get_shopify_token = ShopifyApiHandler(shop).get_access_token(code)
                 session['shopify_token'] = get_shopify_token
                 new_shopify_credential = ShopifyCredentialsModel(user_name=shop, token=get_shopify_token, shop_id_shopify=new_shop)
@@ -27,7 +29,7 @@ def connect():
                 new_beetrack_credential = BeetrackCredentialsModel(api_key=beetrack_api_key, account_uuid=account_uuid, shop_id_beetrack=new_shop)
                 new_beetrack_credential.save_to_db()
                 return redirect('/webhooks')
-            except:
+            except Exception:
                 return render_template('information.html')
         else: 
             return render_template('configuration.html')
