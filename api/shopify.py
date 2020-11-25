@@ -25,10 +25,11 @@ class ShopifyApiHandler:
             'Content-Type': 'application/json'
         }
         #Dejar en variable de ambiente
+        #"https://7mfmofytje.execute-api.us-west-2.amazonaws.com/staging/shopify_handler/integrate"
         params = {
             "webhook": {
                 "topic": "orders/fulfilled",
-                "address": "https://7mfmofytje.execute-api.us-west-2.amazonaws.com/staging/shopify_handler/integrate",
+                "address": "https://c3173cae7300aa5864da751d2ce20d1d.m.pipedream.net",
                 "format": "json"
                 }
             }
