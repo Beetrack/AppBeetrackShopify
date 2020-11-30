@@ -1,9 +1,11 @@
 from flask_restful import Resource
 from models.beetrack import BeetrackCredentialsModel
+import ipdb
 
 class Beetrack(Resource):
 
     def get(self, account_uuid):
+        ipdb.set_trace()
         beetrack_credential_obj = BeetrackCredentialsModel.find_by_uuid(account_uuid)
         try:
             shopify_credential_obj = beetrack_credential_obj.shop.shopify_credentials.pop()

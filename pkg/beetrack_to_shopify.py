@@ -15,15 +15,20 @@ class BeetrackToShopify():
 
     def send_to_shopify(self, account_uuid):
         order_payload = self.homologate_status(account_uuid)
+        print(order_payload)
         send_note = ShopifyApiHandler().create_note_order(self.order_id, order_payload)
+        # falta pasarle el shop y el shopify token a ShopifyApiHnadler(shop, shopify_token)
         return send_note
 
     def homologate_status(self, account_uuid):
         arrived_at = self.get_time()
         if self.status == 1:
+            ipdb.set_trace()
             status = "confirmed"
+            #beetrack_credential_obj = BeetrackCredentialsModel.find_by_uuid(account_uuid)
             get_fulfillment_payload = self.ship_fulfillment_payload(account_uuid)
             send_fulfillmanet = ShopifyApiHandler().create_fulfillment(self.order_id, self.fulfillment_id, get_fulfillment_payload)
+            # falta pasarle el shop y el shopify token a ShopifyApiHnadler(shop, shopify_token)
             print({"Fulfillment Update Response": send_fulfillmanet})
         elif self.status == 2:
             status = "delivered"

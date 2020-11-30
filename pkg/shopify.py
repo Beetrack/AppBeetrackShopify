@@ -2,9 +2,9 @@ import requests, json
 
 class ShopifyApiHandler:
 
-    def __init__(self):
-        self.shop = "test-beetrack-shop.myshopify.com"
-        self.api_key = "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"
+    def __init__(self, shop, shopify_api_key):
+        self.shop = shop
+        self.api_key = shopify_api_key
         self.base_url = 'https://{}/admin/api/2020-10'.format(self.shop)
         self.headers = {
             'X-Shopify-Access-Token': self.api_key,

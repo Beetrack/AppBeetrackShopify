@@ -1,9 +1,11 @@
 from flask_restful import Resource
 from models.shopify import ShopifyCredentialsModel
+import ipdb
 
 class Shopify(Resource):
 
     def get(self, user_name):
+        ipdb.set_trace()
         shopify_credentials_obj = ShopifyCredentialsModel.find_by_user_name(user_name)
         try:
             beetrack_credentials_obj = shopify_credentials_obj.shop.beetrack_credentials.pop()
