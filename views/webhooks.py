@@ -7,8 +7,8 @@ webhooks = Blueprint('webhooks', __name__)
 def webhooks_shopify():
     if 'shop' and 'shopify_token' in session:
         shop = session["shop"]
-        shopify_token = session['shopify_token']
-        create_shopify_webhook = ShopifyApiHandler(shop).create_webhook(shopify_token)
+        shopify_api_key = session['shopify_token']
+        create_shopify_webhook = ShopifyApiHandler(shop, shopify_api_key).create_webhook()
         if create_shopify_webhook:
             account_uuid_info = session['account_uuid']
             return render_template('connected.html', content= account_uuid_info)
