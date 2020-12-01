@@ -45,8 +45,8 @@ class ShopifyApiHandler:
         print(r)
         return r
 
-    """def create_fulfillment(self, order_id, fulfillment_id, payload):
+    def create_fulfillment(self, order_id, fulfillment_id, payload):
         url = self.base_url + '/orders/{}/fulfillments/{}.json'.format(order_id, fulfillment_id)
         r = requests.put(url= url, headers= self.headers, json = payload).json()
         print(r)
-        return r """
+        return r

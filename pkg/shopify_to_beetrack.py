@@ -1,5 +1,5 @@
 import requests, json
-from pkg.beetrack import BeetrackApiHandler
+from api.beetrack import BeetrackApiHandler
 from flask_sqlalchemy import SQLAlchemy
 from models.shopify import ShopifyCredentialsModel
 import ipdb
@@ -13,7 +13,6 @@ class ShopifyToBeetrack():
         beetrack_api_key = beetrack_credentials["api_key"]
         payload = self.create_dispatch_payload()
         create = BeetrackApiHandler(beetrack_api_key).create_dispatch(payload)
-
         return create
 
     def create_dispatch_payload(self):
@@ -35,13 +34,23 @@ class ShopifyToBeetrack():
                 }
         return new_dispatch
 
+    def verify_order(self):
+        verify_beetrack_tag = self.check_for_beetrack_tag()
+        print(verify_beetrack_tag)
+        verify_fulfill_paid = self.check_for_fulfilled_and_paid_order()
+        print(verify_fulfill_paid)
+        if verify_beetrack_tag and verify_fulfill_paid:
+            return True
+        return False
 
     def check_for_beetrack_tag(self):
-        tags = self.body.get("tags")
-        tags_lower = tags.lower()
-        if "beetrack" in tags_lower:
-            return True
-        else:
+        try:
+            tags = self.body.get("tags").lower()
+            print(tags)
+            if "beetrack" in tags:
+                return True
+            return False
+        except:
             return False
 
     def check_for_fulfilled_and_paid_order(self):
@@ -49,8 +58,7 @@ class ShopifyToBeetrack():
         fulfillment_status = self.body.get("fulfillment_status")
         if fulfillment_status == "fulfilled" and financial_status == "paid":
             return True
-        else: 
-            return False
+        return False
 
     def get_shopify_costumer_info(self):
         # Manejar el error si es que la shipping_address no se encuentra en el webhook

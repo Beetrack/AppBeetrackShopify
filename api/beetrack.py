@@ -5,7 +5,7 @@ class BeetrackApiHandler:
     def __init__(self, api_key):
         self.api_key = api_key
         self.headers = {
-            'Content-Type' : 'Applicaction/json',
+            'Content-Type' : "application/json",
             'X-AUTH-TOKEN' : self.api_key
             }
         self.base_url = 'https://app.beetrack.com/api/external/v1'

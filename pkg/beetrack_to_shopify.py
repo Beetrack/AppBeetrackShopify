@@ -1,35 +1,33 @@
-import datetime
+import datetime, requests
 from models.beetrack import BeetrackCredentialsModel
 from pkg.commons import fetch_tag
-from pkg.beetrack import BeetrackApiHandler
-from pkg.shopify import ShopifyApiHandler
+from api.beetrack import BeetrackApiHandler
+from api.shopify import ShopifyApiHandler
 import ipdb
 
 class BeetrackToShopify():
 
-    def __init__(self, body):
+    def __init__(self, body, shopify_credentials):
+        self.shop = shopify_credentials.get("user_name")
+        self.shopify_token = shopify_credentials.get("token")
         self.body = body
         self.status = body.get("status")
         self.order_id = fetch_tag(self.body.get('tags'), "id_order_shopify")
         self.fulfillment_id = fetch_tag(self.body.get('tags'), "id_fulfilled")
 
-    def send_to_shopify(self, account_uuid):
-        order_payload = self.homologate_status(account_uuid)
+    def send_to_shopify(self):
+        order_payload = self.homologate_status()
         print(order_payload)
-        send_note = ShopifyApiHandler().create_note_order(self.order_id, order_payload)
-        # falta pasarle el shop y el shopify token a ShopifyApiHnadler(shop, shopify_token)
+        send_note = ShopifyApiHandler(self.shop, self.shopify_token).create_note_order(self.order_id, order_payload)
         return send_note
 
-    def homologate_status(self, account_uuid):
+    def homologate_status(self):
         arrived_at = self.get_time()
         if self.status == 1:
-            ipdb.set_trace()
             status = "confirmed"
-            #beetrack_credential_obj = BeetrackCredentialsModel.find_by_uuid(account_uuid)
-            get_fulfillment_payload = self.ship_fulfillment_payload(account_uuid)
-            send_fulfillmanet = ShopifyApiHandler().create_fulfillment(self.order_id, self.fulfillment_id, get_fulfillment_payload)
-            # falta pasarle el shop y el shopify token a ShopifyApiHnadler(shop, shopify_token)
-            print({"Fulfillment Update Response": send_fulfillmanet})
+            get_fulfillment_payload = self.ship_fulfillment_payload()
+            send_fulfillment = ShopifyApiHandler(self.shop, self.shopify_token).create_fulfillment(self.order_id, self.fulfillment_id, get_fulfillment_payload)
+            print({"Fulfillment Update Response": send_fulfillment})
         elif self.status == 2:
             status = "delivered"
         elif self.status == 3:
@@ -62,14 +60,15 @@ class BeetrackToShopify():
                 ]
             }
         }
-        print(payload)
+        print({"Note Order Paylaod": payload})
         return payload
 
-    def ship_fulfillment_payload (self, account_uuid):
+    def ship_fulfillment_payload (self):
         identifier = self.body.get("identifier")
-        beetrack_credential_obj = BeetrackCredentialsModel.find_by_uuid(account_uuid) # revisar
-        api_key = beetrack_credential_obj.get("api_ke")
-        get_dispatch = BeetrackApiHandler(api_key).get_dispatch(identifier)
+        url = "http://localhost:5000/shopify_credentials/" + str(self.shop)
+        beetrack_credentials = requests.get(url).json()
+        beetrack_api_key = beetrack_credentials.get("api_key")
+        get_dispatch = BeetrackApiHandler(beetrack_api_key).get_dispatch(identifier)
         beecode = get_dispatch.get("response").get("beecode")
         payload = {
             "fulfillment": {
@@ -81,5 +80,5 @@ class BeetrackToShopify():
                 "tracking_company": "Beetrack"
             }
         }
-        print(payload)
+        print({"Note Fulfillment Paylaod": payload})
         return payload
