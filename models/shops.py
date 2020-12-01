@@ -21,7 +21,6 @@ class ShopsModel(db.Model, Properties):
     def __init__(self, name):
         self.name = name
         Properties.__init__(self)
-        #event.listen(session, 'before_commit', before_commit)
 
 @event.listens_for(ShopsModel, 'before_insert')
 def verify_shop(mapper, connection, target):

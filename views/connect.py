@@ -2,7 +2,7 @@ import uuid
 from db import db
 import ipdb
 from flask import Blueprint, request, session, render_template, redirect
-from api.shopify import ShopifyApiHandler
+from api.shopify import ShopifyToken
 from models.shops import ShopsModel
 from models.shopify import ShopifyCredentialsModel
 from models.beetrack import BeetrackCredentialsModel
@@ -15,11 +15,10 @@ def connect():
         if not 'access_token' in session:
             try:
                 code = request.args.get("code")
-                ipdb.set_trace()
                 shop = session["shop"]
+                get_shopify_token = ShopifyToken(shop).get_access_token(code)
                 new_shop = ShopsModel(name=shop)
-                #new_shop.save_to_db()
-                get_shopify_token = ShopifyApiHandler(shop).get_access_token(code)
+                new_shop.save_to_db()
                 session['shopify_token'] = get_shopify_token
                 new_shopify_credential = ShopifyCredentialsModel(user_name=shop, token=get_shopify_token, shop_id_shopify=new_shop)
                 new_shopify_credential.save_to_db()

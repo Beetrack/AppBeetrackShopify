@@ -12,18 +12,6 @@ class ShopifyApiHandler:
         }
         self.base_url = 'https://{}/admin/api/2020-10'.format(self.shop)
 
-    def get_access_token(self, code):
-        params = {
-            "client_id" : cfg.SHOPIFY_CFG['API_KEY'],
-            "client_secret" : cfg.SHOPIFY_CFG['API_SECRET'],
-            "code" : code
-            }
-        url = "https://{0}/admin/oauth/access_token".format(self.shop)
-        r = requests.post(url, data=params)
-        resp_dict = json.loads(r.text)
-        access_token = resp_dict.get("access_token")
-        return access_token
-
     def create_webhook(self):
         #leave endpoint in enviroment varible
         params = {
@@ -50,3 +38,21 @@ class ShopifyApiHandler:
         r = requests.put(url= url, headers= self.headers, json = payload).json()
         print(r)
         return r
+    
+class ShopifyToken:
+
+    def __init__(self, shop):
+        self.shop = shop
+
+    def get_access_token(self, code):
+        params = {
+            "client_id" : cfg.SHOPIFY_CFG['API_KEY'],
+            "client_secret" : cfg.SHOPIFY_CFG['API_SECRET'],
+            "code" : code
+            }
+        url = "https://{0}/admin/oauth/access_token".format(self.shop)
+        r = requests.post(url, data=params)
+        resp_dict = json.loads(r.text)
+        access_token = resp_dict.get("access_token")
+        return access_token
+
